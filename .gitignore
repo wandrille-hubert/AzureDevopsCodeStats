@@ -1,0 +1,5 @@
+
+packages/**/*
+TFSCodeStats/bin/**/*
+TFSCodeStats/obj/**/*
+.vs/**/*
