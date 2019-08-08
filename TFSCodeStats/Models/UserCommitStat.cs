@@ -6,18 +6,12 @@ using System.Threading.Tasks;
 
 namespace TFSCodeStats.Models
 {
-    class UserStat
+    class UserCommitStat
     {
         public string projectName { get; set; }
         public string repoName { get; set; }
         public string email { get; set; }
         public string name { get; set; }
         public int commitCount { get; set; }
-        public int linesAdded{ get; set; }
-        public int linesRemoved { get; set; }
-        public int linesModified { get; set; }
-        public int filesAdded { get; set; }
-        public int filesModified { get; set; }
-        public int filesDeleted { get; set; }
     }
 }

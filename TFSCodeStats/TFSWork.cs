@@ -18,6 +18,7 @@ namespace TFSCodeStats
     class TFSWork
     {
         public List<UserStat> userStats = new List<UserStat>();
+        public List<UserCommitStat> userCommitStats = new List<UserCommitStat>();
         string personalaccesstoken;
         public TFSWork(string url, string pat)
         {
@@ -55,6 +56,23 @@ namespace TFSCodeStats
                         // TODO: update to handle all cases
                         if (i != 0)
                         {
+                            // Collect commit count
+                            var objc = userStats.FirstOrDefault(x => x.email == commits[i].Committer.Email && x.projectName == proj.Name && x.repoName == repo.Name);
+                            if (objc != null)
+                            {
+                                objc.commitCount = objc.commitCount + 1;
+                            }
+                            else
+                            {
+                                UserStat user = new UserStat();
+                                user.projectName = proj.Name;
+                                user.repoName = repo.Name;
+                                user.email = commits[i].Committer.Email;
+                                user.name = commits[i].Committer.Name;
+                                user.commitCount = user.commitCount + 1;
+                                userStats.Add(user);
+                            }
+
                             // Get list of changes for a commit
                             GitCommitChanges changes = gitClient.GetChangesAsync(commits[i].CommitId, repo.Id).Result;
 
@@ -93,6 +111,66 @@ namespace TFSCodeStats
                                     // Collect code stats
                                     ChurnFileStats(url, proj.Name, repo.Id.ToString(), repo.Name, change, pat, commits[i].CommitId, commits[i - 1].CommitId, commits[i].Committer.Email, commits[i].Committer.Name);
                                 }
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
+        //Only Get Commit Count Stats
+        public TFSWork(string url, string pat, bool commitOnly = true)
+        {
+            // Initialize connection to azure devops
+            personalaccesstoken = pat;
+            var networkCredential = new VssBasicCredential(string.Empty, pat);
+            VssConnection connection = new VssConnection(new Uri(url), networkCredential);
+
+            // Initialize ProjectHttpClient and GitHttpClient
+            var projclient = connection.GetClient<ProjectHttpClient>();
+            GitHttpClient gitClient = connection.GetClient<GitHttpClient>();
+
+            // Get list of projects credentials have access to
+            var projcollection = projclient.GetProjects().Result;
+
+            foreach (var proj in projcollection)
+            {
+                // Get list of repos for a project
+                List<GitRepository> repos = gitClient.GetRepositoriesAsync(proj.Id.ToString()).Result;
+
+                // Set commits query criteria
+                GitQueryCommitsCriteria criteria = new GitQueryCommitsCriteria()
+                {
+                    // Add criterias in here, some examples: ToDate, FromDate, Top, FromCommitId
+                };
+
+                foreach (GitRepository repo in repos)
+                {
+                    // Get list of commits for a repo
+                    List<GitCommitRef> commits = gitClient.GetCommitsAsync(repo.Id, criteria).Result.OrderBy(x => x.Committer.Date).ToList();
+
+                    for (int i = 0; i < commits.Count; i++)
+                    {
+                        // ASSUMPTION: i=0 is first commit and no code/files in this commit
+                        // TODO: update to handle all cases
+                        if (i != 0)
+                        {
+                            // Collect commit count
+                            var objc = userCommitStats.FirstOrDefault(x => x.email == commits[i].Committer.Email && x.projectName == proj.Name && x.repoName == repo.Name);
+                            if (objc != null)
+                            {
+                                objc.commitCount = objc.commitCount + 1;
+                            }
+                            else
+                            {
+                                UserCommitStat user = new UserCommitStat();
+                                user.projectName = proj.Name;
+                                user.repoName = repo.Name;
+                                user.email = commits[i].Committer.Email;
+                                user.name = commits[i].Committer.Name;
+                                user.commitCount = user.commitCount + 1;
+                                userCommitStats.Add(user);
                             }
                         }
                     }

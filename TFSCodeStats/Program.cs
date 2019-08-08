@@ -26,6 +26,18 @@ namespace TFSCodeStats
                 Console.WriteLine("Press any key to exit...");
                 Console.ReadLine();
             }
+
+            // If only want to get commit count stats, uncomment the following
+            /*
+            var tfsWork = new TFSWork(tfsUrl, personalaccesstoken, true);
+
+            if (tfsWork != null)
+            {
+                ConsoleTable.From<UserCommitStat>(tfsWork.userCommitStats).Write();
+                Console.WriteLine("Press any key to exit...");
+                Console.ReadLine();
+            }
+            */
         }
     }
 }
