@@ -27,7 +27,7 @@ namespace TFSCodeStats
                 ConsoleTable.From<UserStat>(tfsWork.userStats).Write();
 
                 // Write results to a csv file
-                WriteToExcel(tfsWork.userStats);
+                WriteToCsv(tfsWork.userStats);
 
                 Console.WriteLine("Press any key to exit...");
                 Console.ReadLine();
@@ -42,7 +42,7 @@ namespace TFSCodeStats
                 ConsoleTable.From<UserCommitStat>(tfsWork.userCommitStats).Write();
 
                 // Write results to a csv file
-                WriteToExcel(tfsWork.userCommitStats);
+                WriteToCsv(tfsWork.userCommitStats);
 
                 Console.WriteLine("Press any key to exit...");
                 Console.ReadLine();
@@ -50,14 +50,14 @@ namespace TFSCodeStats
             */
         }
 
-        private static void WriteToExcel(List<UserCommitStat> ucS)
+        private static void WriteToCsv(List<UserCommitStat> ucS)
         {
             TextWriter twa = new StreamWriter("usercommitstats.csv", true);
             CsvSerializer.SerializeToWriter<List<UserCommitStat>>(ucS, twa);
             twa.Close();
         }
 
-        private static void WriteToExcel(List<UserStat> uS)
+        private static void WriteToCsv(List<UserStat> uS)
         {
             TextWriter twa = new StreamWriter("userstats.csv", true);
             CsvSerializer.SerializeToWriter<List<UserStat>>(uS, twa);
