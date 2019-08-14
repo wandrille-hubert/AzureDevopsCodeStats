@@ -1,6 +1,8 @@
 ﻿using ConsoleTables;
+using ServiceStack.Text;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +25,10 @@ namespace TFSCodeStats
             if (tfsWork != null)
             {
                 ConsoleTable.From<UserStat>(tfsWork.userStats).Write();
+
+                // Write results to a csv file
+                WriteToExcel(tfsWork.userStats);
+
                 Console.WriteLine("Press any key to exit...");
                 Console.ReadLine();
             }
@@ -34,10 +40,28 @@ namespace TFSCodeStats
             if (tfsWork != null)
             {
                 ConsoleTable.From<UserCommitStat>(tfsWork.userCommitStats).Write();
+
+                // Write results to a csv file
+                WriteToExcel(tfsWork.userCommitStats);
+
                 Console.WriteLine("Press any key to exit...");
                 Console.ReadLine();
             }
             */
+        }
+
+        private static void WriteToExcel(List<UserCommitStat> ucS)
+        {
+            TextWriter twa = new StreamWriter("usercommitstats.csv", true);
+            CsvSerializer.SerializeToWriter<List<UserCommitStat>>(ucS, twa);
+            twa.Close();
+        }
+
+        private static void WriteToExcel(List<UserStat> uS)
+        {
+            TextWriter twa = new StreamWriter("userstats.csv", true);
+            CsvSerializer.SerializeToWriter<List<UserStat>>(uS, twa);
+            twa.Close();
         }
     }
 }
