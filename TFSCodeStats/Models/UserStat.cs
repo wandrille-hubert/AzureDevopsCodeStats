@@ -19,5 +19,6 @@ namespace TFSCodeStats.Models
         public int filesAdded { get; set; }
         public int filesModified { get; set; }
         public int filesDeleted { get; set; }
+        public DateTime lastCommitDate { get; set; }
     }
 }

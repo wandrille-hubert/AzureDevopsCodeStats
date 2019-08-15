@@ -61,6 +61,7 @@ namespace TFSCodeStats
                             if (objc != null)
                             {
                                 objc.commitCount = objc.commitCount + 1;
+                                objc.lastCommitDate = objc.lastCommitDate > commits[i].Committer.Date ? objc.lastCommitDate : commits[i].Committer.Date;
                             }
                             else
                             {
@@ -70,6 +71,7 @@ namespace TFSCodeStats
                                 user.email = commits[i].Committer.Email;
                                 user.name = commits[i].Committer.Name;
                                 user.commitCount = user.commitCount + 1;
+                                user.lastCommitDate = user.lastCommitDate > commits[i].Committer.Date ? user.lastCommitDate : commits[i].Committer.Date;
                                 userStats.Add(user);
                             }
 
@@ -161,6 +163,7 @@ namespace TFSCodeStats
                             if (objc != null)
                             {
                                 objc.commitCount = objc.commitCount + 1;
+                                objc.lastCommitDate = objc.lastCommitDate > commits[i].Committer.Date ? objc.lastCommitDate : commits[i].Committer.Date;
                             }
                             else
                             {
@@ -170,6 +173,7 @@ namespace TFSCodeStats
                                 user.email = commits[i].Committer.Email;
                                 user.name = commits[i].Committer.Name;
                                 user.commitCount = user.commitCount + 1;
+                                user.lastCommitDate = user.lastCommitDate > commits[i].Committer.Date ? user.lastCommitDate : commits[i].Committer.Date;
                                 userCommitStats.Add(user);
                             }
                         }

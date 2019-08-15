@@ -13,5 +13,6 @@ namespace TFSCodeStats.Models
         public string email { get; set; }
         public string name { get; set; }
         public int commitCount { get; set; }
+        public DateTime lastCommitDate { get; set; }
     }
 }
